@@ -71,7 +71,7 @@ def findNeighbours(word, returnList=True):
         neighbourDatabase = {}
     try: 
         result = neighbourDatabase[word]
-        return neighbour
+        return result
     except KeyError:
         celexCheck()   
         neighbours = []

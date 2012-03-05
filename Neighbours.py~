@@ -19,9 +19,6 @@ def celexCheck():
     
 
 def loadCELEX(restrictLength=False):
-    ''' Loads the list of words and frequency information from CELEX.txt. '''
-    ''' restrictLength is an optional argument. Passing a number will load '''
-    '''only words of that length. '''
     celexDatabase = open('C:/Python32/Lib/site-packages/Neighbours/CELEX.txt', 
                          'r')
     allTheWords = []

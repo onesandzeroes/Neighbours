@@ -8,6 +8,7 @@ allTheWords = None
 freqDict = None
 sylDict = None
 regularity = None
+neighbourDatabase = None
 
 def celexCheck():
     global allTheWords
@@ -65,22 +66,31 @@ def numSyllables(word):
         return 'Unknown'
 
 def findNeighbours(word, returnList=True):
-    celexCheck()   
-    neighbours = []
-    numNeighbours = 0
-    length = len(word)
-    for x in allTheWords:
-        if length == x[0]:
-            diffCount = 0
-            for y in range(length):
-                if diffCount == 2: break
-                if not word[y] == x[1][y]:
-                    diffCount += 1
-            if diffCount == 1:
-                numNeighbours += 1
-                if returnList:
-                    neighbours.append(x[1])
-    return (numNeighbours, neighbours)
+    global neighbourDatabase
+    if not neighbourDatabase:
+        neighbourDatabase = {}
+    try: 
+        result = neighbourDatabase[word]
+        return neighbour
+    except KeyError:
+        celexCheck()   
+        neighbours = []
+        numNeighbours = 0
+        length = len(word)
+        for x in allTheWords:
+            if length == x[0]:
+                diffCount = 0
+                for y in range(length):
+                    if diffCount == 2: break
+                    if not word[y] == x[1][y]:
+                        diffCount += 1
+                if diffCount == 1:
+                    numNeighbours += 1
+                    if returnList:
+                        neighbours.append(x[1])
+        result = (numNeighbours, neighbours)                
+        neighbourDatabase[word] = result
+        return result
     
 def onsetNeighbours(word, returnList=True):
     celexCheck() 

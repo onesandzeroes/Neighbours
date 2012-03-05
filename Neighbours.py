@@ -25,15 +25,14 @@ def loadCELEX(restrictLength=False):
     for letter in string.ascii_lowercase:
         freqDict[letter] = {}
     for line in celexDatabase:
-        eachWord = line.split()[0]
-        
+        eachWord = str(line.split()[0]).lower()        
         if restrictLength:
             if len(eachWord) == int(restrictLength):
                 allTheWords.append((len(eachWord), eachWord))
-                freqDict[eachWord.lower()[0]][eachWord] = line.split()[1]
+                freqDict[eachWord.lower()[0]][eachWord] = float(line.split()[1])
         else:
             allTheWords.append((len(eachWord), eachWord))
-            freqDict[eachWord.lower()[0]][eachWord] = line.split()[1]
+            freqDict[eachWord.lower()[0]][eachWord] = float(line.split()[1])
     celexDatabase.close()
     return [allTheWords, freqDict]
 
@@ -143,7 +142,7 @@ def neighbourLocations(word):
             if not word[x] == each[x]:
                 nPositions[str(x + 1)].append(each)
         if len(nPositions[str(x +1 )]) == 0:
-            nPositions[str(x + 1)].append('No neighbours')
+            nPositions[str(x + 1)] = None
     return nPositions
 
 def swap(x, i, j):

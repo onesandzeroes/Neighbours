@@ -1,0 +1,1 @@
+This is a little python module containing some functions that should (hopefully) make it easier to prepare stimuli for psycholinuistic experiments, by finding similar words, and by providing their frequency and regularity.

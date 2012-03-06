@@ -19,9 +19,6 @@ def celexCheck():
     
 
 def loadCELEX(restrictLength=False):
-    ''' Loads the list of words and frequency information from CELEX.txt. '''
-    ''' restrictLength is an optional argument. Passing a number will load '''
-    '''only words of that length. '''
     celexDatabase = open('C:/Python32/Lib/site-packages/Neighbours/CELEX.txt', 
                          'r')
     allTheWords = []
@@ -171,38 +168,3 @@ def transNeighbours(word):
         if swapped in freqDict[swapped[0]].keys():    
             tNeighbs.append(swapped)
     return tNeighbs
-
-    
-def minimiseOverlap(word, candidates):
-    ''' Takes a word and a list of prime words, and finds the candidate with'''
-    ''' the lowest overlap. Returns list containing: \n '''
-    ''' 0: the word with lowest overlap \n'''
-    ''' 1: the number of shared letters '''
-    ''' 2: the number of shared letters in the same position'''
-    # Note: might not be working properly for words with repeated letters
-    # because I've used sets
-    wordLetters = list(word)
-    bestCandidate = None
-    bestNumShared = len(word)
-    bestSamePosition = len(word)
-    for cand in candidates:
-        candidateLetters = list(cand)
-        sharedLetters = set(wordLetters) & set(candidateLetters)
-        if len(sharedLetters) < bestNumShared:
-            bestCandidate = cand
-            bestNumShared = len(sharedLetters)
-            samePosition = len(sharedLetters)
-            for shared in sharedLetters:
-                if not word.find(shared) == cand.find(shared):
-                    samePosition -= 1
-            bestSamePosition = samePosition
-        elif len(sharedLetters) == bestNumShared:
-            samePosition = len(sharedLetters)
-            for shared in sharedLetters:
-                if not word.find(shared) == cand.find(shared):
-                    samePosition -= 1
-            if samePosition < bestSamePosition:
-                bestSamePosition = samePosition
-                bestCandidate = cand
-    return [bestCandidate, bestNumShared, bestSamePosition]
-

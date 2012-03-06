@@ -19,9 +19,14 @@ def celexCheck():
     
 
 def loadCELEX(restrictLength=False):
-    ''' Loads the list of words and frequency information from CELEX.txt. '''
-    ''' restrictLength is an optional argument. Passing a number will load '''
-    '''only words of that length. '''
+    ''' Loads the list of words and frequency information from CELEX.txt.
+    restrictLength is an optional argument. Passing a number will load
+    only words of that length. \n
+    All functions that rely on this data currently check if it's loaded
+    and load it if necessary, but if you want to use the restrictLength
+    argument, you have to do it yourself, e.g. \n
+    allTheWords = loadCELEX(restrictLength=5)[0] \n
+    freqDict = loadCELEX(restrictLength=5)[0]'''    
     celexDatabase = open('C:/Python32/Lib/site-packages/Neighbours/CELEX.txt', 
                          'r')
     allTheWords = []
@@ -41,6 +46,8 @@ def loadCELEX(restrictLength=False):
     return [allTheWords, freqDict]
 
 def loadPronunciation():
+    ''' Loads the pronunciation data from pron.vcb. At this point, it only '''
+    '''grabs the number of syllables'''
     pron_data = open('C:/Python32/Lib/site-packages/Neighbours/pron.vcb', 'r')
     syllables = {}
     for line in pron_data:
@@ -52,6 +59,7 @@ def loadPronunciation():
     
 
 def loadRegularityInfo():
+    ''' Loads the regularity info from REG.TXT'''
     reg_txt = open('C:/Python32/Lib/site-packages/Neighbours/REG.TXT', 'r')
     regDict = {}
     for line in reg_txt:

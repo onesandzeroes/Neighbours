@@ -5,17 +5,13 @@ import string
 # In order to check for global variables in the way I've done,
 # you need to initialize those variables as "None" first
 allTheWords = None
-freqDict = None
 sylDict = None
 regularity = None
 neighbourDatabase = None
 
 def subtlexCheck():
-    global allTheWords
-    global freqDict
     if not allTheWords:
-        loaded = loadSUBTLEX()
-        allTheWords, freqDict = loaded[0], loaded[1]
+        loadSUBTLEX()
     
 
 def loadSUBTLEX(restrictLength=False):
@@ -27,27 +23,30 @@ def loadSUBTLEX(restrictLength=False):
     and load it if necessary, but if you want to use the restrictLength
     argument, you have to do it yourself, e.g. \n
     allTheWords = loadSUBTLEX(restrictLength=5)[0] \n
-    freqDict = loadSUBTLEX(restrictLength=5)[0]'''    
+    freqDict = loadSUBTLEX(restrictLength=5)[0]'''
+    global allTheWords
+    global freqDict
     subtlexDatabase = open(
         'C:/Python32/Lib/site-packages/Neighbours/SUBTLEXonlyfrequency.csv', 
-        'r',)    
+        'r')    
     subtlexCSV = csv.reader(subtlexDatabase, dialect='excel')
     next(subtlexCSV)
-    allTheWords = []
-    freqDict = {}
+    wordList = []
+    frequencies = {}
     for letter in string.ascii_lowercase:
-        freqDict[letter] = {}
+        frequencies[letter] = {}
     for line in subtlexCSV:
         eachWord = line[0].lower()        
         if restrictLength:
             if len(eachWord) == int(restrictLength):
-                allTheWords.append((len(eachWord), eachWord))
-                freqDict[eachWord[0]][eachWord] = float(line[1])
+                wordList.append((len(eachWord), eachWord))
+                frequencies[eachWord[0]][eachWord] = float(line[1])
         else:
-            allTheWords.append((len(eachWord), eachWord))
-            freqDict[eachWord[0]][eachWord] = float(line[1])
+            wordList.append((len(eachWord), eachWord))
+            frequencies[eachWord[0]][eachWord] = float(line[1])
     subtlexDatabase.close()
-    return [allTheWords, freqDict]
+    allTheWords = wordList
+    freqDict = frequencies
 
 def loadPronunciation():
     ''' Loads the pronunciation data from pron.vcb. At this point, it only '''

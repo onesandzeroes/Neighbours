@@ -14,8 +14,8 @@ def subtlexCheck():
     global allTheWords
     global freqDict
     if not allTheWords:
-        allTheWords = loadSUBTLEX()[0] 
-        freqDict = loadSUBTLEX()[1] 
+        loaded = loadSUBTLEX()
+        allTheWords, freqDict = loaded[0], loaded[1]
     
 
 def loadSUBTLEX(restrictLength=False):

@@ -10,39 +10,43 @@ sylDict = None
 regularity = None
 neighbourDatabase = None
 
-def celexCheck():
+def subtlexCheck():
     global allTheWords
     global freqDict
     if not allTheWords:
-        allTheWords = loadCELEX()[0] 
-        freqDict = loadCELEX()[1] 
+        allTheWords = loadSUBTLEX()[0] 
+        freqDict = loadSUBTLEX()[1] 
     
 
-def loadCELEX(restrictLength=False):
-    ''' Loads the list of words and frequency information from CELEX.txt.
+def loadSUBTLEX(restrictLength=False):
+    ''' Loads the list of words and frequency information from 
+    SUBTLEXonlyfrequency.csv.
     restrictLength is an optional argument. Passing a number will load
     only words of that length. \n
     All functions that rely on this data currently check if it's loaded
     and load it if necessary, but if you want to use the restrictLength
     argument, you have to do it yourself, e.g. \n
-    allTheWords = loadCELEX(restrictLength=5)[0] \n
-    freqDict = loadCELEX(restrictLength=5)[0]'''    
-    celexDatabase = open('C:/Python32/Lib/site-packages/Neighbours/CELEX.txt', 
-                         'r')
+    allTheWords = loadSUBTLEX(restrictLength=5)[0] \n
+    freqDict = loadSUBTLEX(restrictLength=5)[0]'''    
+    subtlexDatabase = open(
+        'C:/Python32/Lib/site-packages/Neighbours/SUBTLEXonlyfrequency.csv', 
+        'r',)    
+    subtlexCSV = csv.reader(subtlexDatabase, dialect='excel')
+    next(subtlexCSV)
     allTheWords = []
     freqDict = {}
     for letter in string.ascii_lowercase:
         freqDict[letter] = {}
-    for line in celexDatabase:
-        eachWord = str(line.split()[0]).lower()        
+    for line in subtlexCSV:
+        eachWord = line[0].lower()        
         if restrictLength:
             if len(eachWord) == int(restrictLength):
                 allTheWords.append((len(eachWord), eachWord))
-                freqDict[eachWord.lower()[0]][eachWord] = float(line.split()[1])
+                freqDict[eachWord[0]][eachWord] = float(line[1])
         else:
             allTheWords.append((len(eachWord), eachWord))
-            freqDict[eachWord.lower()[0]][eachWord] = float(line.split()[1])
-    celexDatabase.close()
+            freqDict[eachWord[0]][eachWord] = float(line[1])
+    subtlexDatabase.close()
     return [allTheWords, freqDict]
 
 def loadPronunciation():
@@ -84,7 +88,7 @@ def findNeighbours(word, returnList=True):
         result = neighbourDatabase[word]
         return result
     except KeyError:
-        celexCheck()   
+        subtlexCheck()   
         neighbours = []
         numNeighbours = 0
         length = len(word)
@@ -104,7 +108,7 @@ def findNeighbours(word, returnList=True):
         return result
     
 def onsetNeighbours(word, returnList=True):
-    celexCheck() 
+    subtlexCheck() 
     neighbours = []
     numNeighbours = 0
     length = len(word)
@@ -132,11 +136,11 @@ def sharedNeighbours(word1, word2):
     return (len(shared),shared)
 
 def getFrequency(word):
-    celexCheck()
+    subtlexCheck()
     return freqDict[word[0]][word]
 
 def sharedBodies(body):
-    celexCheck()
+    subtlexCheck()
     shared = []
     bodyLength = len(body)
     for word in allTheWords:
@@ -172,7 +176,7 @@ def swap(x, i, j):
     return ''.join(x)
     
 def transNeighbours(word):
-    celexCheck() 
+    subtlexCheck() 
     tNeighbs = []
     for x in range(len(word) - 1):
         swapped = swap(word, x, x + 1)

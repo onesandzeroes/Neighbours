@@ -27,14 +27,12 @@ def loadSUBTLEX(restrictLength=False):
     global allTheWords
     global freqDict
     subtlexDatabase = open(
-        'C:/Python32/Lib/site-packages/Neighbours/SUBTLEXonlyfrequency.csv', 
+        'SUBTLEXonlyfrequency.csv', 
         'r')    
     subtlexCSV = csv.reader(subtlexDatabase, dialect='excel')
     next(subtlexCSV)
     wordList = []
-    frequencies = {}
-    for letter in string.ascii_lowercase:
-        frequencies[letter] = {}
+    frequencies = dict.fromkeys(string.ascii_lowercase, {})
     for line in subtlexCSV:
         eachWord = line[0].lower()        
         if restrictLength:

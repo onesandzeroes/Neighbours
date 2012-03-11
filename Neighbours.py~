@@ -27,7 +27,7 @@ def loadSUBTLEX(restrictLength=False):
     global allTheWords
     global freqDict
     subtlexDatabase = open(
-        'C:/Python32/Lib/site-packages/Neighbours/SUBTLEXonlyfrequency.csv', 
+        'SUBTLEXonlyfrequency.csv', 
         'r')    
     subtlexCSV = csv.reader(subtlexDatabase, dialect='excel')
     next(subtlexCSV)

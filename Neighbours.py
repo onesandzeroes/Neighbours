@@ -1,6 +1,7 @@
 # CELEX.txt structure- word, total F, written F, spoken F
 import csv
 import string
+import os
 
 # In order to check for global variables in the way I've done,
 # you need to initialize those variables as "None" first
@@ -26,7 +27,9 @@ def loadSUBTLEX(restrictLength=False):
     freqDict = loadSUBTLEX(restrictLength=5)[0]'''
     global allTheWords
     global freqDict
-    subtlexDatabase = open('SUBTLEXonlyfrequency.csv', 'r')
+    subtlexDatabase = open(os.path.dirname(__file__) +
+                           '/SUBTLEXonlyfrequency.csv', 
+                           'r')
     subtlexCSV = csv.reader(subtlexDatabase, dialect='excel')
     next(subtlexCSV)
     wordList = []

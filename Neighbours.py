@@ -12,7 +12,7 @@ neighbourDatabase = None
 def subtlexCheck():
     if not allTheWords:
         loadSUBTLEX()
-    
+
 
 def loadSUBTLEX(restrictLength=False):
     ''' Loads the list of words and frequency information from 
@@ -27,16 +27,18 @@ def loadSUBTLEX(restrictLength=False):
     global allTheWords
     global freqDict
     subtlexDatabase = open(
+<<<<<<< HEAD
         'C:/Python32/Lib/site-packages/Neighbours/SUBTLEXv2.csv', 
+=======
+        'SUBTLEXonlyfrequency.csv', 
+>>>>>>> 35487001fb300ff87c1cb8740211b588478317c7
         'r')    
     subtlexCSV = csv.reader(subtlexDatabase, dialect='excel')
     next(subtlexCSV)
     wordList = []
-    frequencies = {}
-    for letter in string.ascii_lowercase:
-        frequencies[letter] = {}
+    frequencies = dict.fromkeys(string.ascii_lowercase, {})
     for line in subtlexCSV:
-        eachWord = line[0].lower()        
+        eachWord = line[0].lower()
         if restrictLength:
             if len(eachWord) == int(restrictLength):
                 wordList.append((len(eachWord), eachWord))
@@ -74,7 +76,7 @@ def numSyllables(word):
     global sylDict
     if not sylDict:
         sylDict = loadPronunciation()
-    try: 
+    try:
         return sylDict[word]
     except KeyError:
         return 'Unknown'
@@ -83,11 +85,11 @@ def findNeighbours(word, returnList=True):
     global neighbourDatabase
     if not neighbourDatabase:
         neighbourDatabase = {}
-    try: 
+    try:
         result = neighbourDatabase[word]
         return result
     except KeyError:
-        subtlexCheck()   
+        subtlexCheck()
         neighbours = []
         numNeighbours = 0
         length = len(word)
@@ -102,7 +104,7 @@ def findNeighbours(word, returnList=True):
                     numNeighbours += 1
                     if returnList:
                         neighbours.append(x[1])
-        result = (numNeighbours, neighbours)                
+        result = (numNeighbours, neighbours)
         neighbourDatabase[word] = result
         return result
     
@@ -179,7 +181,7 @@ def transNeighbours(word):
     tNeighbs = []
     for x in range(len(word) - 1):
         swapped = swap(word, x, x + 1)
-        if swapped in freqDict[swapped[0]].keys():    
+        if swapped in freqDict[swapped[0]].keys():
             tNeighbs.append(swapped)
     return tNeighbs
 

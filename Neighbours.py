@@ -1,10 +1,10 @@
 # CELEX.txt structure- word, total F, written F, spoken F
 import csv
 import string
-import os
+from os.path import dirname
 
 # Need to get the OS specific folder to use for loading datafiles
-_modFolder = os.path.dirname(__file__)
+_modFolder = dirname(__file__)
 
 # In order to check for global variables in the way I've done,
 # you need to initialize those variables as "None" first

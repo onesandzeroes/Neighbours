@@ -218,10 +218,13 @@ def minimiseOverlap(word, candidates):
                 bestCandidate = cand
     return [word, bestCandidate, bestNumShared, bestSamePosition]
 
-def minOverlap(wordList, CandidateList)
-    wordListA = random.shuffle(wordList[:])
-    wordListB = random.shuffle(wordList[:])
-    wordListC = random.shuffle(wordList[:])
+def minOverlap(wordList, CandidateList):
+    wordListA = wordList[:]
+    shuffle(wordListA)
+    wordListB = wordList[:]
+    shuffle(wordListB)
+    wordListC = wordList[:]
+    shuffle(wordListC)    
     resultsA = []
     resultsB = []
     resultsC = []
@@ -234,18 +237,19 @@ def minOverlap(wordList, CandidateList)
     for word in wordListA:
         result = minimiseOverlap(word, candA)
         resultsA.append(result)
-        candA.remove(result[0])
-        sameSumA += result[2]
+        candA.remove(result[1])
+        sameSumA += result[3]
     for word in wordListB:
         result = minimiseOverlap(word, candB)
         resultsB.append(result)
-        candB.remove(result[0])
-        sameSumB += result[2]
+        candB.remove(result[1])
+        sameSumB += result[3]
     for word in wordListC:
         result = minimiseOverlap(word, candC)
         resultsC.append(result)
-        candC.remove(result[0])
-        sameSumC += result[2]
+        candC.remove(result[1])
+        sameSumC += result[3]
+    print(sameSumA, sameSumB, sameSumC)
     if sameSumA < sameSumB and sameSumA < sameSumC: return resultsA
     elif sameSumB < sameSumA and sameSumB < sameSumC: return resultsB
     elif sameSumC < sameSumB and sameSumC < sameSumA: return resultsC

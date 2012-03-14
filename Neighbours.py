@@ -1,6 +1,7 @@
 # CELEX.txt structure- word, total F, written F, spoken F
 import csv
 import string
+from random import shuffle
 from os.path import dirname
 
 # Need to get the OS specific folder to use for loading datafiles
@@ -215,5 +216,36 @@ def minimiseOverlap(word, candidates):
             if samePosition < bestSamePosition:
                 bestSamePosition = samePosition
                 bestCandidate = cand
-    return [bestCandidate, bestNumShared, bestSamePosition]
+    return [word, bestCandidate, bestNumShared, bestSamePosition]
 
+def minOverlap(wordList, CandidateList)
+    wordListA = random.shuffle(wordList[:])
+    wordListB = random.shuffle(wordList[:])
+    wordListC = random.shuffle(wordList[:])
+    resultsA = []
+    resultsB = []
+    resultsC = []
+    sameSumA = 0
+    sameSumB = 0
+    sameSumC = 0
+    candA = CandidateList[:]
+    candB = CandidateList[:]
+    candC = CandidateList[:]
+    for word in wordListA:
+        result = minimiseOverlap(word, candA)
+        resultsA.append(result)
+        candA.remove(result[0])
+        sameSumA += result[2]
+    for word in wordListB:
+        result = minimiseOverlap(word, candB)
+        resultsB.append(result)
+        candB.remove(result[0])
+        sameSumB += result[2]
+    for word in wordListC:
+        result = minimiseOverlap(word, candC)
+        resultsC.append(result)
+        candC.remove(result[0])
+        sameSumC += result[2]
+    if sameSumA < sameSumB and sameSumA < sameSumC: return resultsA
+    elif sameSumB < sameSumA and sameSumB < sameSumC: return resultsB
+    elif sameSumC < sameSumB and sameSumC < sameSumA: return resultsC

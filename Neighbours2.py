@@ -1,36 +1,8 @@
+#! /usr/bin/env python3
+# TODO: write a test for min_overlap_multiple_words()
 import collections
-def minimiseOverlap(word, candidates):
-    ''' Takes a word and a list of prime words, and finds the candidate with'''
-    ''' the lowest overlap. Returns list containing: \n '''
-    ''' 0: the word with lowest overlap \n'''
-    ''' 1: the number of shared letters '''
-    ''' 2: the number of shared letters in the same position'''
-    # Note: might not be working properly for words with repeated letters
-    # because I've used sets
-    wordLetters = list(word)
-    bestCandidate = None
-    bestNumShared = len(word)
-    bestSamePosition = len(word)
-    for cand in candidates:
-        candidateLetters = list(cand)
-        sharedLetters = set(wordLetters) & set(candidateLetters)
-        if len(sharedLetters) < bestNumShared:
-            bestCandidate = cand
-            bestNumShared = len(sharedLetters)
-            samePosition = len(sharedLetters)
-            for shared in sharedLetters:
-                if not word.find(shared) == cand.find(shared):
-                    samePosition -= 1
-            bestSamePosition = samePosition
-        elif len(sharedLetters) == bestNumShared:
-            samePosition = len(sharedLetters)
-            for shared in sharedLetters:
-                if not word.find(shared) == cand.find(shared):
-                    samePosition -= 1
-            if samePosition < bestSamePosition:
-                bestSamePosition = samePosition
-                bestCandidate = cand
-    return [word, bestCandidate, bestNumShared, bestSamePosition]
+import random 
+
 
 def minOverlap(wordList, CandidateList):
     wordListA = wordList[:]
@@ -68,35 +40,77 @@ def minOverlap(wordList, CandidateList):
     elif sameSumB < sameSumA and sameSumB < sameSumC: return resultsB
     elif sameSumC < sameSumB and sameSumC < sameSumA: return resultsC
 
-def min_overlap_multiple_words(
-    words, match_options, most_important='same_pos'):
-    pass
+def min_overlap_multiple_words(words,
+                               match_options,
+                               most_important='same_position',
+                               iterations=10):
+    """
+    Takes a list of words and a list of options to be matched up to them,
+    so that each word has the minimum amount of overlap with its match.
+    The algorithm used is fairly simple- it just shuffles both lists and
+    then looks for the best match for each word in the shuffled list. Since
+    the good matches will probably tend to get used up by the end of the list,
+    the matching isn't always great- to minimize this problem, the process is
+    iterated and the matches with the lowest overall overlap are returned.
 
-def min_overlap_one_word(word, match_options, most_important="same_pos"):
+    Returns a dictionary mapping from each word in words to its matched word
+    """
+    best_match_stat = None
+    best_matches = None
+    for i in range(iterations):
+        current_matches = {}
+        current_stat = 0
+        shuffled_options = random.shuffle(match_options[:])
+        # Need to shuffle the words so that the first word in the
+        # list doesn't always get the ideal matches, and the last
+        # word the leftovers
+        shuffled_words = random.shuffle(words[:])
+        for word in shuffled_words:
+            match = min_overlap_one_word(word, shuffled_options, most_important)
+            current_matches[word] = match
+            current_stat += overlap(word, match, method=most_important)
+        # On the first iteration, the current set of matches will
+        # always be the best
+        if best_match_stat is None:
+            best_match_stat = current_stat
+            best_matches = current_matches
+        else:
+            if current_stat < best_match_stat:
+                best_match_stat = current_stat
+                best_matches = current_matches
+    return best_matches
+
+
+
+
+def min_overlap_one_word(word, match_options, most_important="same_position"):
     """
     Find the item from match_options that has the smallest
     overlap with word, in terms of total shared letters and
     the number of letters in the same position.
     The most_important argument is used to specify whether:
-        "same_pos": The number of letters in the same postion, or
+        "same_position": The number of letters in the same postion, or
         "total": The total number of shared letters
     is the most important value to minimize.
     """
-    ranking_methods = ("same_pos", "total")
+    ranking_methods = ("same_position", "total")
     # Use the ranking method that's not most_important to break ties
     next_important = [r for r in ranking_methods if not r == most_important][0]
     match_stats = {}
     for match in match_options:
-        total = overlap_total(word, match)
-        same_pos = overlap_same_position(word, match)
-        match_stats[match] = {'total': total, 'same_pos': same_pos}
+        match_stats[match] = {
+            'total': overlap(word, match, "total"),
+            'same_position': overlap(word, match, "same_position")
+        }
     # Find the best value on the most_important variable
     best_first_ranking = min(
         match_stats[m][most_important] for m in match_stats)
+    # Find all the match options that take that value
     all_good_options = []
     for match in match_options:
         if match_stats[match][most_important] == best_first_ranking:
             all_good_options.append(match)
+    # Break ties using the next most important overlap measure
     # Not quite sure how to deal with the fact that multiple items
     # might be tied for the best ranking: currently this will just return
     # whichever happens to come first
@@ -105,6 +119,20 @@ def min_overlap_one_word(word, match_options, most_important="same_pos"):
         key=lambda x: match_stats[x][next_important]
     )
     return best_match
+
+def overlap(w1, w2, method='same_position'):
+    """
+    Convenience function to make it easy to call either overlap_total
+    or overlap_same_position by passing either "same_position" or
+    "total" as the method.
+    The individual functions can still be used directly, this
+    just makes it easier to call them in code that might use one or the
+    other at different times
+    """
+    if method == 'same_position':
+        return overlap_same_position(w1, w2)
+    elif method == 'total':
+        return overlap_total(w1, w2)
 
 
 def overlap_total(w1, w2):

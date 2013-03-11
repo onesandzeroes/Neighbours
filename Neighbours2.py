@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # TODO: write a test for min_overlap_multiple_words()
 import collections
-import random 
+import random
 
 
 def minOverlap(wordList, CandidateList):
@@ -10,7 +10,7 @@ def minOverlap(wordList, CandidateList):
     wordListB = wordList[:]
     shuffle(wordListB)
     wordListC = wordList[:]
-    shuffle(wordListC)    
+    shuffle(wordListC)
     resultsA = []
     resultsB = []
     resultsC = []
@@ -36,9 +36,13 @@ def minOverlap(wordList, CandidateList):
         candC.remove(result[1])
         sameSumC += result[3]
     print(sameSumA, sameSumB, sameSumC)
-    if sameSumA < sameSumB and sameSumA < sameSumC: return resultsA
-    elif sameSumB < sameSumA and sameSumB < sameSumC: return resultsB
-    elif sameSumC < sameSumB and sameSumC < sameSumA: return resultsC
+    if sameSumA < sameSumB and sameSumA < sameSumC:
+        return resultsA
+    elif sameSumB < sameSumA and sameSumB < sameSumC:
+        return resultsB
+    elif sameSumC < sameSumB and sameSumC < sameSumA:
+        return resultsC
+
 
 def min_overlap_multiple_words(words,
                                match_options,
@@ -60,14 +64,18 @@ def min_overlap_multiple_words(words,
     for i in range(iterations):
         current_matches = {}
         current_stat = 0
-        shuffled_options = random.shuffle(match_options[:])
+        shuffled_options = match_options[:]
+        random.shuffle(shuffled_options)
         # Need to shuffle the words so that the first word in the
         # list doesn't always get the ideal matches, and the last
         # word the leftovers
-        shuffled_words = random.shuffle(words[:])
+        shuffled_words = words[:]
+        random.shuffle(shuffled_words)
         for word in shuffled_words:
-            match = min_overlap_one_word(word, shuffled_options, most_important)
+            match = min_overlap_one_word(
+                word, shuffled_options, most_important)
             current_matches[word] = match
+            shuffled_options.remove(match)
             current_stat += overlap(word, match, method=most_important)
         # On the first iteration, the current set of matches will
         # always be the best
@@ -79,8 +87,6 @@ def min_overlap_multiple_words(words,
                 best_match_stat = current_stat
                 best_matches = current_matches
     return best_matches
-
-
 
 
 def min_overlap_one_word(word, match_options, most_important="same_position"):
@@ -120,6 +126,7 @@ def min_overlap_one_word(word, match_options, most_important="same_position"):
     )
     return best_match
 
+
 def overlap(w1, w2, method='same_position'):
     """
     Convenience function to make it easy to call either overlap_total
@@ -150,6 +157,7 @@ def overlap_total(w1, w2):
         if letter in w2_counts:
             total += min(w1_counts[letter], w2_counts[letter])
     return total
+
 
 def overlap_same_position(w1, w2):
     """
@@ -183,9 +191,20 @@ if __name__ == "__main__":
     )
     assert(
         min_overlap_one_word(
-            "abcde", 
-            ["edcba", "fbfff", "edbca"], 
+            "abcde",
+            ["edcba", "fbfff", "edbca"],
             most_important="total"
         ) == "fbfff"
+    )
+    print("OK")
+    print("Test min_overlap_multiple_words:")
+    test_words = ["abcde", "fghij", "klmno"]
+    test_matches = ["bfzzz", "glzzz", "dmzzz"]
+    assert(
+        min_overlap_multiple_words(test_words, test_matches, "total") == {
+            "abcde": "glzzz",
+            "fghij": "dmzzz",
+            "klmno": "bfzzz"
+        }
     )
     print("OK")

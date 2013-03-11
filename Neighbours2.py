@@ -58,9 +58,9 @@ def min_overlap_one_word(word, match_options, most_important="same_position"):
         "total": The total number of shared letters
     is the most important value to minimize.
     """
-    ranking_methods = ("same_position", "total")
     # Use the ranking method that's not most_important to break ties
-    next_important = [r for r in ranking_methods if not r == most_important][0]
+    other_method = {"same_position": "total", "total": "same_position"}
+    next_important = other_method[most_important]
     match_stats = {}
     for match in match_options:
         match_stats[match] = {

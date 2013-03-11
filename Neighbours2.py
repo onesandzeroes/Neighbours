@@ -1,47 +1,6 @@
 #! /usr/bin/env python3
-# TODO: write a test for min_overlap_multiple_words()
 import collections
 import random
-
-
-def minOverlap(wordList, CandidateList):
-    wordListA = wordList[:]
-    shuffle(wordListA)
-    wordListB = wordList[:]
-    shuffle(wordListB)
-    wordListC = wordList[:]
-    shuffle(wordListC)
-    resultsA = []
-    resultsB = []
-    resultsC = []
-    sameSumA = 0
-    sameSumB = 0
-    sameSumC = 0
-    candA = CandidateList[:]
-    candB = CandidateList[:]
-    candC = CandidateList[:]
-    for word in wordListA:
-        result = minimiseOverlap(word, candA)
-        resultsA.append(result)
-        candA.remove(result[1])
-        sameSumA += result[3]
-    for word in wordListB:
-        result = minimiseOverlap(word, candB)
-        resultsB.append(result)
-        candB.remove(result[1])
-        sameSumB += result[3]
-    for word in wordListC:
-        result = minimiseOverlap(word, candC)
-        resultsC.append(result)
-        candC.remove(result[1])
-        sameSumC += result[3]
-    print(sameSumA, sameSumB, sameSumC)
-    if sameSumA < sameSumB and sameSumA < sameSumC:
-        return resultsA
-    elif sameSumB < sameSumA and sameSumB < sameSumC:
-        return resultsB
-    elif sameSumC < sameSumB and sameSumC < sameSumA:
-        return resultsC
 
 
 def min_overlap_multiple_words(words,
